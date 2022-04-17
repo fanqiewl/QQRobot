@@ -26,3 +26,9 @@
 - SpringBoot 2.6.3
 
 ## 项目截图
+<div align="center">
+    <img src=".akong/1.png" alt="project" />
+    <img src=".akong/2.png" alt="project" />
+    <img src=".akong/3.png" alt="project" />
+</div>
+
