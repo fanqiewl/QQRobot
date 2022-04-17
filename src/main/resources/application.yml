@@ -1,0 +1,28 @@
+server:
+  # 配置服务端口
+  port: 8080
+spring:
+  application:
+    # 项目名
+    name: QQRobot
+  datasource:
+    # 数据库驱动
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 默认的连接池
+    name: defaultDataSource
+    # 数据库密码
+    password: 'root123'
+    # 连接字符串
+    url: jdbc:mysql://localhost:3306/mytest?serverTimezone=UTC
+    # 数据库用户名
+    username: 'root'
+  devtools:
+    restart:
+      # 开启热部署
+      enabled: true
+      # 设置哪些资源变动后不触发热部署，会覆盖默认的exclude内容（资源不会触发重启，但会触发实时重新加载）
+      # exclude: WEB-INF/**,static/**
+      # 监控额外的路径（优先于exclude）
+      # additional-paths: src/main/java
+  aop:
+    proxy-target-class: true

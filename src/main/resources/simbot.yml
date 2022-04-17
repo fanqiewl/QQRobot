@@ -1,0 +1,4 @@
+simbot:
+  core:
+    bot-resource-type: BOTH
+    scan-package: com.akong.qqrobot.listeners
