@@ -36,6 +36,7 @@ public class RobotController {
 
     @RequestMapping("/login")
     public Bot login() {
+        // 暂未成功，目测需要重构Robot工厂
         try {
             Bot bot = botManager.registerBot(BotVerifyInfo.withCodeVerification("3087609973", "99999"));
         } catch (BotVerifyException e) {

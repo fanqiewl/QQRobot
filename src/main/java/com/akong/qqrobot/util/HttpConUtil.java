@@ -24,8 +24,8 @@ public class HttpConUtil {
         con.setRequestMethod("GET");
 
         // 设置请求时长
-        con.setConnectTimeout(5000);
-        con.setReadTimeout(5000);
+        con.setConnectTimeout(3000);
+        con.setReadTimeout(3000);
 
         // 启动连接
         con.connect();

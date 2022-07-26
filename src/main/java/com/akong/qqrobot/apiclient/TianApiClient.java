@@ -1,6 +1,8 @@
 package com.akong.qqrobot.apiclient;
 
+import com.akong.qqrobot.annotation.ExceptionRetry;
 import com.akong.qqrobot.util.HttpConUtil;
+import com.akong.qqrobot.util.SpringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,7 +18,7 @@ import java.net.URL;
  * @author Akong
  * @since 2022/2/7 6:23
  */
-@Component
+@Component("tianApiClient")
 public class TianApiClient {
     @Resource
     private ObjectMapper objectMapper;
@@ -29,7 +31,7 @@ public class TianApiClient {
     public String goodNight() {
         try {
             // 将JSON数据转为实体对象
-            JsonNode jsonNode = objectMapper.readTree(apiClient("https://api.tianapi.com/wanan/index"));
+            JsonNode jsonNode = objectMapper.readTree(SpringUtils.getBean(this.getClass()).apiClient("https://api.tianapi.com/wanan/index"));
             // 是否成功判断
             if (200 != jsonNode.get("code").asInt())
                 // 返回默认的信息
@@ -50,7 +52,7 @@ public class TianApiClient {
     public String ancientBooks() {
         try {
             // 将JSON数据转为实体对象
-            JsonNode jsonNode = objectMapper.readTree(apiClient("https://api.tianapi.com/gjmj/index"));
+            JsonNode jsonNode = objectMapper.readTree(SpringUtils.getBean(this.getClass()).apiClient("https://api.tianapi.com/gjmj/index"));
             // 是否成功判断
             if (200 != jsonNode.get("code").asInt())
                 // 返回默认的信息
@@ -69,6 +71,7 @@ public class TianApiClient {
      * @param link 请求的API链接
      * @return 返回JSON数据
      */
+    @ExceptionRetry
     public String apiClient(String link) {
         try {
             // 天行数据api密钥

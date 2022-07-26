@@ -2,7 +2,6 @@ package com.akong.qqrobot;
 
 import com.akong.qqrobot.annotation.GroupFilter;
 import com.akong.qqrobot.util.HttpConUtil;
-import com.akong.qqrobot.util.MusicUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,8 +25,8 @@ class QqRobotApplicationTests {
 
     @Test
     @GroupFilter
-    void contextLoads() throws Exception {
-        System.out.println(MusicUtil.toDayMusic());
+    void contextLoads() {
+        
     }
 
 }

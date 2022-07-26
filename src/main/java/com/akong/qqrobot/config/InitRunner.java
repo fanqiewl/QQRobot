@@ -24,8 +24,6 @@ public class InitRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         // 装配上线的机器人
-        botManager.getBots().forEach(bot -> {
-            GlobalData.globalBots.put(bot.getBotInfo().getAccountCode(), MyUtils.BotInfoParseBotVo(bot.getBotInfo()));
-        });
+        botManager.getBots().forEach(bot -> GlobalData.globalBots.put(bot.getBotInfo().getAccountCode(), MyUtils.BotInfoParseBotVo(bot.getBotInfo())));
     }
 }

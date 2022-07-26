@@ -1,10 +1,12 @@
 package com.akong.qqrobot.util;
 
+import com.akong.qqrobot.annotation.ExceptionRetry;
 import com.akong.qqrobot.model.Music;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -18,16 +20,18 @@ import java.util.List;
  * @author Akong
  * @since 2022/2/4 17:23
  */
+@Component("musicUtil")
 public class MusicUtil {
     // 实体JSON转换工具
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * 每日推荐音乐
      *
      * @return 返回节点对象
      */
-    public static JsonNode toDayMusic() throws Exception {
+    @ExceptionRetry
+    public JsonNode toDayMusic() throws Exception {
         // 设置请求链接
         URL url = new URL("https://music.api.akongwl.top/api/toDayMusic");
         // 开启连接
@@ -44,7 +48,8 @@ public class MusicUtil {
      * @param music 音乐实体
      * @return 返回音乐链接
      */
-    public static String extractLink(Music music) throws Exception {
+    @ExceptionRetry
+    public String extractLink(Music music) throws Exception {
         // 定义默认提取链接
         String path = "https://music.api.akongwl.top/api/exMusicLink";
         // 定义参数
@@ -71,7 +76,8 @@ public class MusicUtil {
      *
      * @return 返回节点对象
      */
-    public static List<Music> chooseSong(String musicName, Integer rows) throws Exception {
+    @ExceptionRetry
+    public List<Music> chooseSong(String musicName, Integer rows) throws Exception {
         // 定义音乐集合
         List<Music> musicList;
         // 定义临时集合
@@ -105,7 +111,8 @@ public class MusicUtil {
      *
      * @return 返回音乐集合
      */
-    public static ArrayList<Music> selMusic(String musicName, Integer rows, Integer page, Integer engine) throws Exception {
+    @ExceptionRetry
+    public ArrayList<Music> selMusic(String musicName, Integer rows, Integer page, Integer engine) throws Exception {
         // 定义请求链接（默认引擎）
         String path = "https://music.api.akongwl.top/api/selMusic";
         // 永硕引擎

@@ -24,9 +24,11 @@ import java.nio.charset.StandardCharsets;
 @Component
 @EnableScheduling
 public class RobotGroupQuartz {
+    @Resource(name = "musicUtil")
+    private MusicUtil musicUtil;
     @Resource
     private BotManager botManager;
-    @Resource
+    @Resource(name = "tianApiClient")
     private TianApiClient tianApiClient;
 
     /**
@@ -103,7 +105,7 @@ public class RobotGroupQuartz {
         BotSender sender = bot.getSender();
 
         try {
-            jsonNode = MusicUtil.toDayMusic();
+            jsonNode = musicUtil.toDayMusic();
         } catch (Exception e) {
             sender.SENDER.sendGroupMsg(groupInfo, "绝对不是" + bot.getBotInfo().getAccountNickname() + "的错，请再试一遍叭，喵呜(๑•̀ㅁ•́ฅ)");
             throw new RuntimeException("歌曲获取失败");

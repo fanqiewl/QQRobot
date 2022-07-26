@@ -8,13 +8,9 @@ import com.akong.qqrobot.util.MusicUtil;
 import com.akong.qqrobot.util.SaveLogUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import kotlinx.coroutines.TimeoutCancellationException;
-import love.forte.common.ioc.annotation.Beans;
-import love.forte.common.utils.Carrier;
 import love.forte.simbot.annotation.*;
-import love.forte.simbot.api.message.assists.Flag;
 import love.forte.simbot.api.message.events.GroupMemberPermissionChanged;
 import love.forte.simbot.api.message.events.GroupMsg;
-import love.forte.simbot.api.message.events.PrivateMsg;
 import love.forte.simbot.api.sender.MsgSender;
 import love.forte.simbot.bot.Bot;
 import love.forte.simbot.filter.MatchType;
@@ -22,7 +18,9 @@ import love.forte.simbot.listener.ContinuousSessionScopeContext;
 import love.forte.simbot.listener.ListenerContext;
 import love.forte.simbot.listener.SessionCallback;
 import net.mamoe.mirai.message.data.MusicKind;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -32,11 +30,14 @@ import java.util.List;
  * @author Akong
  * @since 2022/2/6 8:38
  */
-@Beans
+@Service
 public class RobotGroupListener {
     private final SaveLogUtil logUtil = new SaveLogUtil();
     // 猫猫码工具类
     private final CatCodeUtil catUtil = CatCodeUtil.INSTANCE;
+
+    @Resource(name = "musicUtil")
+    private MusicUtil musicUtil;
 
     @OnGroup
     @Filters(value = {@Filter(atBot = true, value = "音乐", trim = true)})
@@ -79,7 +80,7 @@ public class RobotGroupListener {
 
         try {
             // 调用工具类获取歌曲
-            GlobalData.musicMap.put(key, MusicUtil.chooseSong(str, 10));
+            GlobalData.musicMap.put(key, musicUtil.chooseSong(str, 10));
         } catch (Exception e) {
             sender.SENDER.sendGroupMsg(groupMsg, "被玩坏了，绝对不是" + groupMsg.getBotInfo().getAccountRemarkOrNickname() + "的错 Σ( ° △ °|||)");
             e.printStackTrace();
@@ -89,7 +90,7 @@ public class RobotGroupListener {
         // 获取音乐列表
         List<Music> musicList = GlobalData.musicMap.get(key);
         // 定义提示字符串
-        String prompt = "共搜索到" + musicList.size() + "首音乐\n";
+        StringBuilder prompt = new StringBuilder("共搜索到" + musicList.size() + "首音乐\n");
         // 发送结果提示
         for (int i = 0; i < musicList.size(); i++) {
             // 获取当前音乐
@@ -99,12 +100,12 @@ public class RobotGroupListener {
             // 获取歌手
             String artist = music.getArtist();
             // 拼接字符串
-            prompt += (i + 1) + "、" + musicName + " - " + artist + "\n";
+            prompt.append(i + 1).append("、").append(musicName).append(" - ").append(artist).append("\n");
         }
         // 拼接选择提示
-        prompt += "\n请" + groupMsg.getAccountInfo().getAccountRemarkOrNickname() + "在10s内使用序号选择音乐";
+        prompt.append("\n请").append(groupMsg.getAccountInfo().getAccountRemarkOrNickname()).append("在10s内使用序号选择音乐");
         // 发送提示
-        sender.SENDER.sendGroupMsg(groupMsg, prompt);
+        sender.SENDER.sendGroupMsg(groupMsg, prompt.toString());
 
         // 构建回调函数
         final SessionCallback<Integer> callback = SessionCallback.<Integer>builder().onResume(choose -> {
@@ -129,7 +130,7 @@ public class RobotGroupListener {
             // 音乐链接
             String musicUrl;
             try {
-                musicUrl = MusicUtil.extractLink(music);
+                musicUrl = musicUtil.extractLink(music);
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new RuntimeException("音乐链接提取失败！！！");
@@ -174,10 +175,10 @@ public class RobotGroupListener {
 
     private void musicToDay(GroupMsg groupMsg, MsgSender sender) {
         // 调用帮助类获取到每日推荐音乐
-        JsonNode jsonNode = null;
+        JsonNode jsonNode;
 
         try {
-            jsonNode = MusicUtil.toDayMusic();
+            jsonNode = musicUtil.toDayMusic();
         } catch (Exception e) {
             sender.SENDER.sendGroupMsg(groupMsg, "绝对不是" + groupMsg.getBotInfo().getAccountNickname() + "的错，请再试一遍叭，喵呜(๑•̀ㅁ•́ฅ)");
             throw new RuntimeException("歌曲获取失败");
